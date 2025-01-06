@@ -1,0 +1,78 @@
+-- Membuat Tabel Airlines
+CREATE TABLE Airlines (
+    Id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    AirlineName VARCHAR(255) NOT NULL,
+    AirlineCode VARCHAR(10) UNIQUE NOT NULL
+);
+
+-- Membuat Tabel Airports
+CREATE TABLE Airports (
+    Id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    AirportCode VARCHAR(3) UNIQUE NOT NULL,
+    AirportName VARCHAR(255) NOT NULL,
+    City VARCHAR(255) NOT NULL,
+    Country VARCHAR(255) NOT NULL
+);
+
+-- Membuat Tabel FlightRoute
+CREATE TABLE FlightRoute (
+    Id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    DepartureAirportId UNIQUEIDENTIFIER FOREIGN KEY REFERENCES Airports(Id),
+    ArrivalAirportId UNIQUEIDENTIFIER FOREIGN KEY REFERENCES Airports(Id),
+    Distance DECIMAL(10,2) -- Contoh: 10 digit total, 2 digit desimal
+);
+
+-- Membuat Tabel Flights
+CREATE TABLE Flights (
+    Id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    AirlineId UNIQUEIDENTIFIER FOREIGN KEY REFERENCES Airlines(Id),
+    FlightRouteId UNIQUEIDENTIFIER FOREIGN KEY REFERENCES FlightRoute(Id),
+    FlightNumber VARCHAR(20) UNIQUE NOT NULL,
+    DepartureDateTime DATETIME2 NOT NULL,
+    ArrivalDateTime DATETIME2 NOT NULL
+);
+
+-- Membuat Tabel Seats
+CREATE TABLE Seats (
+    Id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    FlightId UNIQUEIDENTIFIER FOREIGN KEY REFERENCES Flights(Id),
+    SeatNumber VARCHAR(10) NOT NULL,
+    SeatClass VARCHAR(20) CHECK (SeatClass IN ('Economy', 'Business', 'First')),
+    Availability BIT NOT NULL DEFAULT 1 -- 1 = Available, 0 = Not Available
+);
+
+-- Membuat Tabel Passengers
+CREATE TABLE Passengers (
+    Id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    FirstName VARCHAR(255) NOT NULL,
+    LastName VARCHAR(255) NOT NULL,
+    PassportNumber VARCHAR(50) UNIQUE,
+    Email VARCHAR(255) UNIQUE,
+    PhoneNumber VARCHAR(20)
+);
+
+-- Membuat Tabel Bookings
+CREATE TABLE Bookings (
+    Id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    PassengerId UNIQUEIDENTIFIER FOREIGN KEY REFERENCES Passengers(Id),
+    BookingDate DATETIME2 NOT NULL DEFAULT GETDATE(),
+    BookingStatus VARCHAR(20) CHECK (BookingStatus IN ('Pending', 'Confirmed', 'Cancelled')) DEFAULT 'Pending'
+);
+
+-- Membuat Tabel Payments
+CREATE TABLE Payments (
+    Id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    BookingId UNIQUEIDENTIFIER FOREIGN KEY REFERENCES Bookings(Id) UNIQUE, -- One-to-one with Bookings
+    PaymentDate DATETIME2 NOT NULL DEFAULT GETDATE(),
+    PaymentMethod VARCHAR(50),
+    Amount DECIMAL(15,2),
+    PaymentStatus VARCHAR(20) CHECK (PaymentStatus IN ('Success', 'Failed'))
+);
+
+-- Membuat Tabel Tickets
+CREATE TABLE Tickets (
+    Id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+    BookingId UNIQUEIDENTIFIER FOREIGN KEY REFERENCES Bookings(Id),
+    SeatId UNIQUEIDENTIFIER FOREIGN KEY REFERENCES Seats(Id),
+    TicketPrice DECIMAL(15,2)
+);

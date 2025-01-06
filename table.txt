@@ -1,0 +1,64 @@
+Table Airlines
+Id
+AirlineName
+AirlineCode
+
+Table Airports
+Id
+AirportCode
+AirportName
+City
+Country
+
+Table FlightRoute
+Id
+DepartureAirportId
+ArrivalAirportId
+Distance
+
+Table Flights
+Id
+AirlineId
+FlightRouteId
+FlightNumber
+DepartureDateTime
+ArrivalDateTime
+
+TableSeats
+Id
+FlightId
+SeatNumber
+SeatClass
+Availability
+
+Table Tickets
+Id
+BookingId
+SeatId
+TicketPrice
+
+Table Bookings
+Id
+PassengerId
+BookingDate
+BookingStatus
+
+Table Payments
+Id
+BookingId
+PaymentDate
+PaymentMethod
+Amount
+PaymentStatus
+
+Table Passengers
+Id
+FirstName
+LastName
+PassportNumber
+Email
+PhoneNumber
+
+
+
+
