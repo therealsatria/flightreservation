@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AirAccess")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cf18cdbb086b82885c7419233aff9101d6dc40ed")]
 [assembly: System.Reflection.AssemblyProductAttribute("AirAccess")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AirAccess")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

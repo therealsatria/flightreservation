@@ -167,3 +167,4 @@
 /home/satria/Documents/AirAccess/obj/Debug/net8.0/AirAccess.pdb
 /home/satria/Documents/AirAccess/obj/Debug/net8.0/AirAccess.genruntimeconfig.cache
 /home/satria/Documents/AirAccess/obj/Debug/net8.0/ref/AirAccess.dll
+/home/satria/Documents/AirAccess/obj/Debug/net8.0/AirAccess.sourcelink.json
