@@ -23,7 +23,7 @@ namespace AirAccess.Models
         [Required]
         public Guid AirlineId { get; set; }
         [ForeignKey("AirlineId")]
-        public Airline Airline { get; set; }
+        public required Airline Airline { get; set; }
 
         [Required]
         public Guid FlightRouteId { get; set; }

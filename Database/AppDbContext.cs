@@ -42,6 +42,13 @@ namespace AirAccess.Database
                 .HasOne(fr => fr.DestinationAirport)
                 .WithMany(a => a.DestinationRoutes)
                 .HasForeignKey(fr => fr.DestinationAirportId);
+            
+            modelBuilder.Entity<Flight>()
+                .HasOne(f => f.Airline)
+                .WithMany(a => a.Flights)
+                .HasForeignKey(f => f.AirlineId);
+            
+
 
             // Additional configurations if needed
             // modelBuilder.Entity<YourEntity>().Property(e => e.PropertyName).HasColumnName("ColumnName");
