@@ -48,6 +48,28 @@ namespace AirAccess.Database
                 .WithMany(a => a.Flights)
                 .HasForeignKey(f => f.AirlineId);
             
+            modelBuilder.Entity<Flight>()
+                .HasOne(f => f.FlightRoute)
+                .WithMany(fr => fr.Flights)
+                .HasForeignKey(f => f.FlightRouteId);
+            
+            modelBuilder.Entity<Seat>()
+                .HasOne(s => s.Flight)
+                .WithMany(f => f.Seats)
+                .HasForeignKey(s => s.FlightId);
+
+            modelBuilder.Entity<Ticket>()
+                .HasOne(t => t.Booking)
+                .WithMany(b => b.Tickets)
+                .HasForeignKey(t => t.BookingId);
+
+            modelBuilder.Entity<Booking>()
+                .HasOne(b => b.Passenger)
+                .WithMany(p => p.Bookings)
+                .HasForeignKey(b => b.PassengerId);
+
+            
+            
 
 
             // Additional configurations if needed
