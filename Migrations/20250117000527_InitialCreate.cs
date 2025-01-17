@@ -16,7 +16,8 @@ namespace AirAccess.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AirlineName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                    AirlineName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    AirlineCode = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -30,7 +31,8 @@ namespace AirAccess.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AirportCode = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false),
                     AirportName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    City = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                    City = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -78,6 +80,26 @@ namespace AirAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Bookings",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BookingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PassengerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BookingStatus = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bookings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Bookings_Passengers_PassengerId",
+                        column: x => x.PassengerId,
+                        principalTable: "Passengers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Flights",
                 columns: table => new
                 {
@@ -107,49 +129,6 @@ namespace AirAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Seats",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    SeatNumber = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Class = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    FlightId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IsBooked = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Seats", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Seats_Flights_FlightId",
-                        column: x => x.FlightId,
-                        principalTable: "Flights",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Bookings",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    BookingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    PaymentStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PassengerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PaymentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Bookings", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Bookings_Passengers_PassengerId",
-                        column: x => x.PassengerId,
-                        principalTable: "Passengers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Payments",
                 columns: table => new
                 {
@@ -166,6 +145,27 @@ namespace AirAccess.Migrations
                         name: "FK_Payments_Bookings_BookingId",
                         column: x => x.BookingId,
                         principalTable: "Bookings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Seats",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SeatNumber = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Class = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    FlightId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsBooked = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Seats", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Seats_Flights_FlightId",
+                        column: x => x.FlightId,
+                        principalTable: "Flights",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -200,11 +200,6 @@ namespace AirAccess.Migrations
                 name: "IX_Bookings_PassengerId",
                 table: "Bookings",
                 column: "PassengerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Bookings_PaymentId",
-                table: "Bookings",
-                column: "PaymentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FlightRoutes_DestinationAirportId",
@@ -245,25 +240,13 @@ namespace AirAccess.Migrations
                 name: "IX_Tickets_FlightId",
                 table: "Tickets",
                 column: "FlightId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Bookings_Payments_PaymentId",
-                table: "Bookings",
-                column: "PaymentId",
-                principalTable: "Payments",
-                principalColumn: "Id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Bookings_Passengers_PassengerId",
-                table: "Bookings");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Bookings_Payments_PaymentId",
-                table: "Bookings");
+            migrationBuilder.DropTable(
+                name: "Payments");
 
             migrationBuilder.DropTable(
                 name: "Seats");
@@ -272,7 +255,13 @@ namespace AirAccess.Migrations
                 name: "Tickets");
 
             migrationBuilder.DropTable(
+                name: "Bookings");
+
+            migrationBuilder.DropTable(
                 name: "Flights");
+
+            migrationBuilder.DropTable(
+                name: "Passengers");
 
             migrationBuilder.DropTable(
                 name: "Airlines");
@@ -282,15 +271,6 @@ namespace AirAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "Airports");
-
-            migrationBuilder.DropTable(
-                name: "Passengers");
-
-            migrationBuilder.DropTable(
-                name: "Payments");
-
-            migrationBuilder.DropTable(
-                name: "Bookings");
         }
     }
 }

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AirAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241228154605_InitialCreate")]
+    [Migration("20250117000527_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -30,6 +30,10 @@ namespace AirAccess.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AirlineCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AirlineName")
                         .IsRequired()
@@ -62,6 +66,10 @@ namespace AirAccess.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Airports", (string)null);
@@ -76,24 +84,15 @@ namespace AirAccess.Migrations
                     b.Property<DateTime>("BookingDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("BookingStatus")
+                        .HasColumnType("bit");
+
                     b.Property<Guid>("PassengerId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("PaymentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("PaymentStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("decimal(18, 2)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PassengerId");
-
-                    b.HasIndex("PaymentId");
 
                     b.ToTable("Bookings", (string)null);
                 });
@@ -272,13 +271,7 @@ namespace AirAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AirAccess.Models.Payment", "Payment")
-                        .WithMany()
-                        .HasForeignKey("PaymentId");
-
                     b.Navigation("Passenger");
-
-                    b.Navigation("Payment");
                 });
 
             modelBuilder.Entity("AirAccess.Models.Flight", b =>
