@@ -22,5 +22,7 @@ namespace AirAccess.Models
         public Flight Flight { get; set; }
 
         public bool IsBooked { get; set; } = false; // Default to not booked
+
+        public ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
     }
 }

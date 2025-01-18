@@ -28,7 +28,7 @@ namespace AirAccess.Models
         [Required]
         public Guid FlightRouteId { get; set; }
         [ForeignKey("FlightRouteId")]
-        public FlightRoute FlightRoute { get; set; }
+        public required FlightRoute FlightRoute { get; set; }
 
         public ICollection<Seat> Seats { get; set; } = new List<Seat>();
     }

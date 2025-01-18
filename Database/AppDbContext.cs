@@ -39,24 +39,36 @@ namespace AirAccess.Database
 
             // Configure relationships
             modelBuilder.Entity<FlightRoute>()
+                .HasOne(fr => fr.OriginAirport)
+                .WithMany(a => a.OriginatingRoutes)
+                .HasForeignKey(fr => fr.OriginAirportId)
+                .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
+
+            modelBuilder.Entity<FlightRoute>()
                 .HasOne(fr => fr.DestinationAirport)
                 .WithMany(a => a.DestinationRoutes)
-                .HasForeignKey(fr => fr.DestinationAirportId);
-            
-            modelBuilder.Entity<Flight>()
-                .HasOne(f => f.Airline)
-                .WithMany(a => a.Flights)
-                .HasForeignKey(f => f.AirlineId);
-            
+                .HasForeignKey(fr => fr.DestinationAirportId)
+                .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
+
             modelBuilder.Entity<Flight>()
                 .HasOne(f => f.FlightRoute)
                 .WithMany(fr => fr.Flights)
-                .HasForeignKey(f => f.FlightRouteId);
+                .HasForeignKey(f => f.FlightRouteId);    
+
+            modelBuilder.Entity<Flight>()
+                .HasOne(f => f.Airline)
+                .WithMany(a => a.Flights)
+                .HasForeignKey(f => f.AirlineId);            
             
             modelBuilder.Entity<Seat>()
                 .HasOne(s => s.Flight)
                 .WithMany(f => f.Seats)
                 .HasForeignKey(s => s.FlightId);
+
+            modelBuilder.Entity<Ticket>()
+                .HasOne(t => t.Seat)
+                .WithMany(s => s.Tickets)
+                .HasForeignKey(t => t.SeatId);
 
             modelBuilder.Entity<Ticket>()
                 .HasOne(t => t.Booking)

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AirAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250117000527_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250118001813_initchanges")]
+    partial class initchanges
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -298,13 +298,13 @@ namespace AirAccess.Migrations
                     b.HasOne("AirAccess.Models.Airport", "DestinationAirport")
                         .WithMany("DestinationRoutes")
                         .HasForeignKey("DestinationAirportId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("AirAccess.Models.Airport", "OriginAirport")
                         .WithMany("OriginatingRoutes")
                         .HasForeignKey("OriginAirportId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("DestinationAirport");

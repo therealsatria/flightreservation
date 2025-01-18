@@ -11,14 +11,14 @@ namespace AirAccess.Models
         [Required(ErrorMessage = "Ticket Number is required")]
         public string TicketNumber { get; set; }
 
-        [Required]
+        
         public Guid BookingId { get; set; }
         [ForeignKey("BookingId")]
-        public Booking Booking { get; set; }
+        public required Booking Booking { get; set; }
 
-        [Required]
-        public Guid FlightId { get; set; }
-        [ForeignKey("FlightId")]
-        public Flight Flight { get; set; }
+        public Guid SeatId { get; set; }
+        [ForeignKey("SeatId")]
+        public required Seat Seat { get; set; }
+
     }
 }

@@ -6,17 +6,17 @@ namespace AirAccess.Models
     public class FlightRoute
     {
         [Key]
-        public Guid Id { get; set; }
+        public required Guid Id { get; set; }
 
         [Required]
-        public Guid OriginAirportId { get; set; }
+        public required Guid OriginAirportId { get; set; }
         [ForeignKey("OriginAirportId")]
-        public Airport OriginAirport { get; set; }
+        public required Airport OriginAirport { get; set; }
 
         [Required]
-        public Guid DestinationAirportId { get; set; }
+        public required Guid DestinationAirportId { get; set; }
         [ForeignKey("DestinationAirportId")]
-        public Airport DestinationAirport { get; set; }
+        public required Airport DestinationAirport { get; set; }
 
         public ICollection<Flight> Flights { get; set; } = new List<Flight>(); // Initialize collection
     }
